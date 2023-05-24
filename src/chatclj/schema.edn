@@ -1,0 +1,40 @@
+[
+ {:db/ident       :chat/head
+  :db/valueType   :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc         "ref to the most recent chat message"}
+ {:db/ident       :chat/model
+  :db/valueType   :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc         "the chat model used, ie gpt-3.5-turbo or gpt-4"}
+ {:db/ident       :chat/streaming?
+  :db/valueType   :db.type/boolean
+  :db/cardinality :db.cardinality/one
+  :db/doc         "flag to indicate if responses should be streamed"}
+ {:db/ident       :chat/label
+  :db/valueType   :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc         "label for chat that can be set by the user"}
+ {:db/ident       :msg/role
+  :db/valueType   :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/doc         "role of message, ie system/user/assistant"}
+ {:db/ident       :msg/content
+  :db/valueType   :db.type/string
+  :db/fulltext    true
+  :db/cardinality :db.cardinality/one
+  :db/doc         "message text content"}
+ {:db/ident       :msg/parent
+  :db/valueType   :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc         "message that precedes this one"}
+
+ {:db/ident       :user/id
+  :db/valueType   :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/unique      :db.unique/identity
+  :db/doc         "identity of user"}
+ {:db/ident       :user/current-chat
+  :db/valueType   :db.type/ref
+  :db/cardinality :db.cardinality/one}
+ ]

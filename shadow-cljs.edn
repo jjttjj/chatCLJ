@@ -1,0 +1,21 @@
+{:deps  true
+ :nrepl {:port 9001}
+ :builds
+ {:dev
+  {:target      :browser
+   :devtools    {:watch-dir       "resources/public" ; live reload CSS
+                 :hud             #{:errors :progress}
+                 :ignore-warnings true} ; warnings don't prevent hot-reload
+   :output-dir  "resources/public/js"
+   :asset-path  "/js"
+   :modules     {:main {:entries [chatclj.main]
+                        :init-fn chatclj.main/start!}}
+   :build-hooks [(shadow.cljs.build-report/hook {:output-to "target/build_report.html"})
+                 #_(user/rcf-shadow-hook)]}
+
+  :prod
+  {:target            :browser
+   :output-dir        "resources/public/js"
+   :asset-path        "/js"
+   :module-hash-names true
+   :modules           {:main {:entries [chatclj.main] :init-fn chatclj.main/start!}}}}}

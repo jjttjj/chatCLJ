@@ -1,0 +1,37 @@
+{:paths ["src" "resources"]
+ :deps
+ {org.clojure/clojure      {:mvn/version "1.12.0-alpha3"}
+  com.hyperfiddle/electric {:mvn/version "v2-alpha-284-g0bc5f4bc"}
+
+  info.sunng/ring-jetty9-adapter
+  {:mvn/version "0.17.7"
+   :exclusions  [org.slf4j/slf4j-api info.sunng/ring-jetty9-adapter-http3]}
+  org.clojure/clojurescript                           {:mvn/version "1.11.60"}
+  ring-basic-authentication/ring-basic-authentication {:mvn/version "1.1.1"}
+
+  com.datomic/peer {:mvn/version "1.0.6726"}
+
+  org.babashka/http-client {:mvn/version "0.1.4"}
+  babashka/process         {:mvn/version "0.4.16"}
+  babashka/fs              {:mvn/version "0.3.17"}
+  org.babashka/json        {:mvn/version "0.1.1"}
+
+  thheller/shadow-cljs     {:mvn/version "2.20.1"}
+  com.knuddels/jtokkit     {:mvn/version "0.4.0"}
+
+  com.taoensso/timbre        {:mvn/version "6.1.0"}
+  ;; I want to use timbre for everything. I think tihs does it.
+  ;;ch.qos.logback/logback-classic {:mvn/version "1.4.7"}
+  com.fzakaria/slf4j-timbre  {:mvn/version "0.3.21-11-cb46216-SNAPSHOT"}
+  org.slf4j/log4j-over-slf4j {:mvn/version "2.0.7"}
+  org.slf4j/jul-to-slf4j     {:mvn/version "2.0.7"}
+  org.slf4j/jcl-over-slf4j   {:mvn/version "2.0.7"}
+
+  ;; just for xio/lines-in
+  net.cgrand/xforms {:mvn/version "0.19.4"}}
+
+ :aliases
+ {:dev
+  {:jvm-opts
+   ["-Xss2m" ;; https://github.com/hyperfiddle/photon/issues/11
+    "-XX:-OmitStackTraceInFastThrow"]}}}
