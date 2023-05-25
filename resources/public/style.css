@@ -198,3 +198,37 @@ img {
 .checkbox:checked {
   background-color: #6272a4;
 }
+
+/*
+these support both markdown-it and nextjournal/markdown's default output
+should probably customize both to be the same or decide to use one.
+*/
+.message p:first-child, .message div:first-child {
+  display:inline;
+
+}
+
+.markdown code, .viewer-code {
+  /* Define styles for code blocks inside markdown */
+  font-family: "Courier New", monospace;
+  background-color: #282a36;
+  color: #f8f8f2;
+  padding: 10px;
+  border-radius: 4px;
+
+
+  display: block;
+  /* width: 100%; */
+  width: 80ch;
+  box-sizing: border-box;
+
+}
+
+
+code {
+  font-family: "Courier New", monospace;
+  background-color: #282a36;
+  color: #f8f8f2;
+  padding: 2px 4px;
+  border-radius: 4px;
+}

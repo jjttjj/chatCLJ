@@ -3,10 +3,14 @@
             [hyperfiddle.electric :as e]
             [hyperfiddle.electric-dom2 :as dom]
             [taoensso.timbre :as log]
+            [nextjournal.markdown :as md]
+            [nextjournal.markdown.transform :as md.transform]
+            [clojure.walk :as walk]
             #?@(:clj [[chatclj.system :as sys]
                       [chatclj.openai :as openai]
                       [datomic.api :as d]
-                      [clojure.java.io :as io]]))
+                      [clojure.java.io :as io]])
+            #?@(:cljs [["markdown-it" :as MarkdownIt]]))
   (:import [hyperfiddle.electric Pending]))
 
 (def models ["gpt-3.5-turbo" "gpt-4"])
@@ -210,6 +214,42 @@
     "what's 1+1")
   )
 
+
+;;; Note: hiccup ids not currently supported in tags (ie :div#my-id)
+(e/def H2e)
+(e/defn ElectricMarkdown [text]
+  (let [data   (md/parse text)
+        hiccup (md.transform/->hiccup data)]
+    (binding [H2e (e/fn [hiccup-data]
+                    (let [[tag & tagclasses] (str/split (name (first hiccup-data)) #"\.")
+                          [children attrs] (if (map? (second hiccup-data))
+                                             [(second hiccup-data) (drop 2 hiccup-data)]
+                                             [(drop 1 hiccup-data)])
+                          attrs (cond-> attrs
+                                  (seq tagclasses) (update :class concat tagclasses))]
+                      (dom/with (dom/new-node dom/node tag)
+                        (when (seq attrs)
+                          (dom/props attrs))
+                        (e/on-unmount #(set! (.. dom/node -style -display) "none")) ; hack
+                        (e/for [child children]
+                          (if (string? child)
+                            (dom/text child)
+                            (H2e. child))))))]
+      (H2e. hiccup))))
+
+
+;;; Alternative option: just use markdown-it and set the innerHTML
+#?(:cljs
+   (let [md (MarkdownIt. "default" #_"zero" #_"commonmark")]
+     (defn parse-markdown [s]
+       (.render md s))))
+
+(e/defn ElectricMarkdown2 [text]
+  (dom/span (dom/props {:class "markdown"})
+    (set! (.-innerHTML dom/node)
+      (parse-markdown text))))
+
+
 (e/defn Content [chat-id]
   (e/client
     (let [chat (e/server (d/pull db '[*] chat-id))
@@ -263,7 +303,8 @@
                   (dom/props {:class "message"})
                   (when role (dom/text (name role) " > "))
                   (if content
-                    (dom/text content)
+                    #_(dom/text content) ;; raw text
+                    (ElectricMarkdown. content)
                     (e/for-by identity [frag (get msg-id->frags id)]
                       (let [delta (some-> frag :choices first :delta)]
                         (when-let [content (:content delta)]
