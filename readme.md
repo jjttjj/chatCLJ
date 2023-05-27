@@ -13,5 +13,6 @@ Set `OPENAI_API_KEY` to your api key.
 ```
 git clone https://github.com/jjttjj/chatCLJ
 cd chatCLJ
+yarn
 clj -X:dev chatclj.system/start
 ```
