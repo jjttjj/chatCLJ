@@ -182,16 +182,21 @@
 
            resp-msg
            (if (:chat/streaming? chat)
-             (reduce
-               (fn [pending-msg frag]
-                 (swap! !msg-id->frags update resp-msg-id (fnil conj []) frag)
-                 (let [delta (some-> frag :choices first :delta)]
-                   (if-let [role (:role delta)]
-                     (assoc pending-msg :role role)
-                     (if-let [content (:content delta)]
-                       (update pending-msg :content str content)
-                       pending-msg))))
-               {:content ""}
+             (transduce
+               identity
+               (fn
+                 ([] {:content ""})
+                 ([pending-msg frag]
+                  (swap! !msg-id->frags update resp-msg-id (fnil conj []) frag)
+                  (let [delta (some-> frag :choices first :delta)]
+                    (if-let [role (:role delta)]
+                      (assoc pending-msg :role role)
+                      (if-let [content (:content delta)]
+                        (update pending-msg :content str content)
+                        pending-msg))))
+                 ([msg]
+                   (swap! !msg-id->frags dissoc resp-msg-id)
+                   msg))
                (openai/streaming-request req))
              ;; else, non-streaming request
              (-> (openai/request req) :choices first :message))
