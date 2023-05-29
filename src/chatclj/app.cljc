@@ -315,7 +315,7 @@
                       (.getElementById js/document "msg-bottom")
                       #_dom/node))))))
           (dom/div
-            (dom/props {:style {:hiddent true}
+            (dom/props {:style {:hidden true}
                         :id    "msg-bottom"})))
 
         (dom/div
