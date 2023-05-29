@@ -302,18 +302,19 @@
 
         (dom/ul (dom/props {:class "message-area"})
           (e/server
-            (e/client
-              (e/for-by :db/id [{:keys [msg/content msg/role db/id] :as msg} msgs]
+            (e/for-by :db/id [{:keys [msg/content msg/role db/id] :as msg} msgs]
+              (e/client
                 (dom/li
                   (dom/props {:class "message"})
                   (when role (dom/text (name role) " > "))
                   (if content
                     #_(dom/text content) ;; raw text
                     (ElectricMarkdown. content)
-                    (e/for-by identity [frag (get msg-id->frags id)]
-                      (let [delta (some-> frag :choices first :delta)]
-                        (when-let [content (:content delta)]
-                          (dom/span (dom/text content))))))
+                    (e/server
+                      (e/for-by identity [frag (get msg-id->frags id)]
+                        (let [delta (some-> frag :choices first :delta)]
+                          (when-let [content (:content delta)]
+                            (e/client (dom/span (dom/text content))))))))
                   (do
                     ;; Every time we see a new msg in for-by, we scroll to the bottom
                     (.scrollIntoView
