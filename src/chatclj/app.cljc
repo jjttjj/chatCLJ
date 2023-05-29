@@ -320,7 +320,7 @@
                       (.getElementById js/document "msg-bottom")
                       #_dom/node))))))
           (dom/div
-            (dom/props {:style {:hidden true}
+            (dom/props {:style {:display "none"}
                         :id    "msg-bottom"})))
 
         (dom/div
