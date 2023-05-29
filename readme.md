@@ -8,6 +8,8 @@ Work in progress, there are rough edges and a lot to be improved. Use at your ow
 
 # Usage
 
+You will need a funded OpenAI API account with the appropriate models enabled.
+
 Set `OPENAI_API_KEY` to your api key.
 
 ```
